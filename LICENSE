@@ -1,0 +1,42 @@
+Evaluation-Only Licence
+
+Copyright (c) 2026 Vo Ba Hoang Minh. All rights reserved.
+
+This software is made available for EVALUATION ONLY. It is not open source, and no
+OSI-approved licence applies to it.
+
+PERMITTED
+
+  1. You may view, read, and study the contents of this repository.
+  2. You may download it and run it locally, unmodified, for the sole purpose of
+     evaluating the author's work -- for example when assessing the author for
+     employment, a contract, or an investment.
+
+NOT PERMITTED, without the copyright holder's prior written permission
+
+  3. Redistribution of this software, in whole or in part, in source or in any other
+     form, by any means.
+  4. Modification of this software, and the creation of derivative works from it,
+     other than transient local changes made while evaluating it under clause 2.
+  5. Any use of this software, or of any part of it, in or for a commercial product,
+     a commercial service, or an internal business process.
+  6. Any use of this software, or of any part of it, as training data for, or as an
+     input to the development of, a machine-learning model or dataset.
+  7. Sublicensing, selling, renting, leasing, or otherwise transferring any right in
+     this software.
+
+RESERVATION OF RIGHTS
+
+  All rights not expressly granted above are reserved by the copyright holder. No
+  patent, trademark, or other right is granted by this licence, whether expressly, by
+  implication, or by estoppel. This licence may be revoked by the copyright holder at
+  any time, on notice.
+
+NO WARRANTY
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+  OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

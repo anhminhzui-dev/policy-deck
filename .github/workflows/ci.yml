@@ -1,0 +1,42 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install package
+        run: pip install -e .
+
+      - name: Install test dependency
+        run: pip install pytest
+
+      - name: Run tests
+        run: pytest -q
+
+      - name: Verify the deck is frozen
+        run: policy-deck generate-deck --check
+
+      - name: Verify the holdout deck is frozen
+        run: policy-deck generate-deck --holdout --check
+
+      - name: Score against the published budget
+        run: policy-deck score --receipt parity.json
+
+      - name: Score the holdout against its own budget
+        run: policy-deck score --holdout --receipt holdout_receipt.json
+
+      - name: Scan for forbidden strings
+        run: python scripts/forbidden_scan.py

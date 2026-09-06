@@ -1,0 +1,16 @@
+{
+  "deck": "decks/synthetic_v1.jsonl",
+  "deck_sha256": "90c145c4b879493fd34f719413099ad3b2226bebcaf97ffd69419ebd3f8b4def",
+  "fn_budget": 0,
+  "fp_budget": 36,
+  "generator_seed": 20260906,
+  "hard_case_mismatch_budget": 0,
+  "hard_cases": "decks/hard_cases.jsonl",
+  "holdout": "decks/holdout_v1.jsonl",
+  "holdout_fn_budget": 0,
+  "holdout_fp_budget": 8,
+  "holdout_rows": 190,
+  "holdout_sha256": "957be086027a0f8bfa9c41aa2633f0c6e34b1ac71190abc152bb06fd4c7a642a",
+  "misroute_budget": 0,
+  "rows": 1260
+}
