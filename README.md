@@ -1,5 +1,11 @@
 # policy-deck
 
+A small, dependency-free shell-command policy classifier for agent guardrails, scored like a
+model against a frozen, seeded deck and a published error budget, not shipped on faith.
+
+[![tests](https://github.com/anhminhzui-dev/policy-deck/actions/workflows/ci.yml/badge.svg)](https://github.com/anhminhzui-dev/policy-deck/actions/workflows/ci.yml)
+[![licence: evaluation-only](https://img.shields.io/badge/licence-evaluation--only-blue)](LICENSE)
+
 A guardrail is a classifier; score it like one.
 
 Most agent guardrails are a pile of regexes nobody ever measured — they ship, they fire, and no
@@ -19,7 +25,17 @@ makes, written so a stranger can falsify it.
 False negatives are the ones that cost you something, so the false-negative budget in this
 package is zero, and it is never raised to make a run pass.
 
-## Quickstart
+## Why this exists
+
+Most agent guardrails are never scored at all; they ship, they fire on something, and nobody can
+say how often that something was harmless. This package asks a narrower, answerable question
+instead: what does it take to grade a guardrail like a classifier, with a frozen deck, a stated
+error budget, and a scorer that exits non-zero the moment the budget is missed? It is a
+from-scratch, dependency-free re-implementation of ideas read from a private agent-harness
+guardrail (see "Where it came from" below), rebuilt end to end on a synthetic deck so that every
+number in this README is one a stranger can regenerate and check.
+
+## Try it in 60 seconds
 
 ```console
 $ pip install -e .
@@ -83,6 +99,24 @@ clears with: --approve-irreversible
 
 Exit code is `0` when the command is `ALLOW`, `1` when it is blocked, so `policy-deck explain`
 doubles as a pre-flight check in a script.
+
+## Boundaries
+
+What the receipts above do and do not prove, stated plainly:
+
+- **Every row is synthetic.** The fitted deck is template-generated from a fixed seed; the holdout
+  and the second blind-pass deck are hand-written from the rule titles. None of the three is
+  sampled from real command history, and no production agent traffic informs any number here.
+- **No live traffic was ever measured.** This package has not been run against a real agent
+  harness in production. The private system it was extracted from is not published, and none of
+  its measurements are quoted or implied anywhere in this repository.
+- **The blind passes are the closest proxy to independence this package has, not a substitute for
+  real traffic.** Four of the holdout's eight risky rule families were authored after the pattern
+  was already in view (see "The holdout deck" below); the two blind-pass receipts state exactly
+  which numbers that weakens and by how much.
+- **This is a text classifier, not a sandbox.** See "What it does not do" below for the specific
+  indirections (variable aliasing, encoded payloads, command substitution) it cannot see by
+  construction.
 
 ## The four verdicts
 
