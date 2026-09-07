@@ -1,39 +1,22 @@
 # policy-deck
 
-A small, dependency-free shell-command policy classifier for agent guardrails, scored like a
-model against a frozen, seeded deck and a published error budget, not shipped on faith.
+[![CI](https://github.com/anhminhzui-dev/policy-deck/actions/workflows/ci.yml/badge.svg)](https://github.com/anhminhzui-dev/policy-deck/actions/workflows/ci.yml)
+[![Licence](https://img.shields.io/badge/licence-evaluation--only-blue)](LICENSE)
 
-[![tests](https://github.com/anhminhzui-dev/policy-deck/actions/workflows/ci.yml/badge.svg)](https://github.com/anhminhzui-dev/policy-deck/actions/workflows/ci.yml)
-[![licence: evaluation-only](https://img.shields.io/badge/licence-evaluation--only-blue)](LICENSE)
+**A guardrail is a classifier. Measure its mistakes.**
 
-A guardrail is a classifier; score it like one.
+A dependency-free command-text classifier with 11 rules, four verdicts and an executable error budget. The scorer pins its decks before classification, reports false positives, false negatives and routing errors separately, and exits nonzero when the budget fails.
 
-Most agent guardrails are a pile of regexes nobody ever measured — they ship, they fire, and no
-one can tell you how often they fire on something harmless. `policy-deck` is a small, readable
-shell-command policy (11 rules, four verdicts: `ALLOW` / `ASK_MONEY` / `ASK_IRREVERSIBLE` /
-`DENY`) plus the machinery to grade it: a frozen, seeded, sha-pinned deck of labelled commands, a
-hand-written hard-cases file for the obfuscations and flag flips that decide real outcomes, a
-scorer that reports false positives, false negatives, precision, and recall, and a published
-budget the scorer **exits non-zero against** when it is missed.
+```text
+command → normalize / mask quoted data → ordered rules → severity + approval flags
+labelled deck + hash pin → classifier → error counts → budget pass or fail
+```
 
-This is an extraction of a private agent-harness guardrail onto a synthetic command deck. **The
-deck shipped here is generated from templates, and every number in this README is measured on it**
-— no measurement of the private original is quoted anywhere in this repository, and none is
-implied by the ones that are. See "How it is scored" below for the claim this package actually
-makes, written so a stranger can falsify it.
+The recorded result is 8 FP / 0 FN on 1,260 fitted synthetic rows and 2 FP / 0 FN on 190 separately authored rows. The second deck is partly rule-aware, not independent production traffic. Disclosed branch-switch over-refusals count as errors rather than being relabelled as successes.
 
-False negatives are the ones that cost you something, so the false-negative budget in this
-package is zero, and it is never raised to make a run pass.
+The strongest test is not a green total: regression tests reinsert broken rules and require the evaluation to expose them. A separate parity check keeps the injected-rule scorer consistent with ordinary classification.
 
-## Why this exists
-
-Most agent guardrails are never scored at all; they ship, they fire on something, and nobody can
-say how often that something was harmless. This package asks a narrower, answerable question
-instead: what does it take to grade a guardrail like a classifier, with a frozen deck, a stated
-error budget, and a scorer that exits non-zero the moment the budget is missed? It is a
-from-scratch, dependency-free re-implementation of ideas read from a private agent-harness
-guardrail (see "Where it came from" below), rebuilt end to end on a synthetic deck so that every
-number in this README is one a stranger can regenerate and check.
+This is a text classifier, not an execution sandbox, authenticated approval service or deployed enforcement layer. Approval flags are inputs to classification; the host must decide who may supply them.
 
 ## Try it in 60 seconds
 
@@ -100,23 +83,11 @@ clears with: --approve-irreversible
 Exit code is `0` when the command is `ALLOW`, `1` when it is blocked, so `policy-deck explain`
 doubles as a pre-flight check in a script.
 
-## Boundaries
+## Scope and integration
 
-What the receipts above do and do not prove, stated plainly:
+Results describe synthetic command decks: the fitted deck is template-generated, and separate decks are partly rule-aware. They measure these declared cases, not real-traffic risk. The receipts preserve which rule families were authored with patterns in view.
 
-- **Every row is synthetic.** The fitted deck is template-generated from a fixed seed; the holdout
-  and the second blind-pass deck are hand-written from the rule titles. None of the three is
-  sampled from real command history, and no production agent traffic informs any number here.
-- **No live traffic was ever measured.** This package has not been run against a real agent
-  harness in production. The private system it was extracted from is not published, and none of
-  its measurements are quoted or implied anywhere in this repository.
-- **The blind passes are the closest proxy to independence this package has, not a substitute for
-  real traffic.** Four of the holdout's eight risky rule families were authored after the pattern
-  was already in view (see "The holdout deck" below); the two blind-pass receipts state exactly
-  which numbers that weakens and by how much.
-- **This is a text classifier, not a sandbox.** See "What it does not do" below for the specific
-  indirections (variable aliasing, encoded payloads, command substitution) it cannot see by
-  construction.
+Use this as a measured command-text classifier alongside actual execution controls, not as a security sandbox. The labelled indirection gaps below remain deliberate test cases. Production-agent traffic has not been evaluated by this package.
 
 ## The four verdicts
 
@@ -440,6 +411,10 @@ to raise, precisely when the sensor is slow, which correlates with the real pres
 supposed to be measuring. This package applies the same principle in one place: an operational
 failure in `score` (a missing budget file, an unreadable deck, a hash that does not match the pin)
 is exit code `2`, kept structurally apart from `0`/`1`, the pass/fail of the budget itself.
+
+## Project context
+
+Problem definition, architecture and acceptance review: **Minh Vo**, with AI-assisted implementation. This focused tool belongs to a broader body of data, assessment and training-systems work described in the [research overview](https://github.com/anhminhzui-dev#research-engineering-the-evidence-behind-ai-judgement). Its runnable scope is the mechanism documented here.
 
 ## Licence
 
